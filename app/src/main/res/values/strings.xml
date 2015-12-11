@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Prototype</string>
+    <string name="title_activity_maps">Sample Prototype</string>
+    <string name="tab_map">Map</string>
+    <string name="tab_barList">Bar List</string>
+    <string name="tab_nearbyMe">Nearby Me</string>
+</resources>
