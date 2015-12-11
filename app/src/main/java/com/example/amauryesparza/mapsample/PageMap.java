@@ -31,8 +31,7 @@ public class PageMap extends Fragment  {
 
         mapView = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
         map = mapView.getMap();
-
-
+        
         return fragmentView;
     }
 }
