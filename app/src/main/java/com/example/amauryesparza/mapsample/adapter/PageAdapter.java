@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.example.amauryesparza.mapsample.PageBarList;
 import com.example.amauryesparza.mapsample.PageMap;
+import com.example.amauryesparza.mapsample.PageNearby;
 
 /**
  * Created by AmauryEsparza on 12/8/15.
@@ -24,8 +25,10 @@ public class PageAdapter  extends FragmentStatePagerAdapter {
         switch(position){
             case 0:
                 return new PageBarList();
-            default:
+            case 1:
                 return new PageMap();
+            default:
+                return new PageNearby();
         }
     }
 

@@ -14,6 +14,6 @@ public class PageBarList extends Fragment {
     public PageBarList(){}
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        return inflater.inflate(R.layout.pager_barlist, container, false);
+        return inflater.inflate(R.layout.page_barlist, container, false);
     }
 }

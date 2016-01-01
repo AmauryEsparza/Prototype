@@ -1,5 +1,6 @@
 package com.example.amauryesparza.mapsample;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_barList));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_map));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_nearbyMe));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
@@ -45,5 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+
     }
 }

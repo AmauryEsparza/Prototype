@@ -4,4 +4,9 @@
     <string name="tab_map">Map</string>
     <string name="tab_barList">Bar List</string>
     <string name="tab_nearbyMe">Nearby Me</string>
+
+    <string name="discover_nearby_devices">Discover nearby devices</string>
+    <string name="discover_nearby_devices_button">Discover nearby devices button</string>
+    <string name="share_device_information">Share device information</string>
+    <string name="share_device_information_button">Share device information button</string>
 </resources>
