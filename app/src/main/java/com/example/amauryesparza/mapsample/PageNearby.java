@@ -147,6 +147,8 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
         mMessageListener = new MessageListener() {
             @Override
             public void onFound(final Message message) {
+                final String messageString = new String(message.getContent());
+                Log.i(TAG, messageString);
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -154,6 +156,8 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
                                 DeviceMessage.fromNearbyMessage(message).getMessageBody());
                     }
                 });
+                Log.i(TAG + " 2 ", messageString);
+
             }
 
             @Override
@@ -372,6 +376,7 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
      */
     private void publish() {
         Log.i(TAG, "trying to publish");
+
         // Cannot proceed without a connected GoogleApiClient. Reconnect and execute the pending
         // task in onConnected().
         if (!mGoogleApiClient.isConnected()) {
@@ -498,10 +503,14 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
      * Helper for editing entries in SharedPreferences.
      */
     private void updateSharedPreference(String key, String value) {
-        getActivity().getPreferences(Context.MODE_PRIVATE)
-                .edit()
-                .putString(key, value)
-                .apply();
+        //TODO: Hot fix because cause an exception. Probably must to split the callbacks
+        //TODO: See call hierarchy Fragment.onStop() method
+        if(getActivity() != null) {
+            getActivity().getPreferences(Context.MODE_PRIVATE)
+                    .edit()
+                    .putString(key, value)
+                    .apply();
+        }
     }
 
     /**

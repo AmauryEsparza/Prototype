@@ -27,8 +27,10 @@ public class PageAdapter  extends FragmentStatePagerAdapter {
                 return new PageBarList();
             case 1:
                 return new PageMap();
-            default:
+            case 2:
                 return new PageNearby();
+            default:
+                return new PageBarList();
         }
     }
 
