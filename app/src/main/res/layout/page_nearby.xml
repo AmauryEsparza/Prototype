@@ -17,6 +17,59 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <ImageButton
+                android:id="@+id/imageButton3"
+                android:layout_width="@dimen/icon_dimension"
+                android:layout_height="@dimen/icon_dimension"
+                android:layout_centerInParent="true"
+                android:background="@null"
+                android:contentDescription="@string/discover_nearby_devices_button"
+                android:src="@drawable/ic_nearby" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="@dimen/icon_dimension"
+                android:layout_height="@dimen/icon_dimension"
+                android:layout_centerInParent="true"
+                android:background="@null"
+                android:contentDescription="@string/discover_nearby_devices_button"
+                android:src="@drawable/ic_nearby" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="@dimen/icon_dimension"
+                android:layout_height="@dimen/icon_dimension"
+                android:layout_centerInParent="true"
+                android:background="@null"
+                android:contentDescription="@string/discover_nearby_devices_button"
+                android:src="@drawable/ic_nearby" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
 
@@ -100,6 +153,44 @@
         </RelativeLayout>
     </LinearLayout>
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/new_message_edit_text"
+            android:hint="@string/publish_new_message"
+            android:layout_weight="0.89" />
+
+        <ProgressBar
+            style="@android:style/Widget.ProgressBar.Small"
+            android:id="@+id/new_message_progress_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <ImageButton
+                android:id="@+id/new_message_image_button"
+                android:layout_width="@dimen/icon_dimension"
+                android:layout_height="@dimen/icon_dimension"
+                android:layout_centerInParent="true"
+                android:background="@null"
+                android:contentDescription="@string/share_device_information_button"
+                android:src="@drawable/ic_share" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <ListView
         android:id="@+id/nearby_devices_list_view"

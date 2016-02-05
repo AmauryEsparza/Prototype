@@ -9,4 +9,6 @@
     <string name="discover_nearby_devices_button">Discover nearby devices button</string>
     <string name="share_device_information">Share device information</string>
     <string name="share_device_information_button">Share device information button</string>
+    <string name="publish_new_message">Publish message</string>
+    <string name="publish_new_message_button">New message publish button</string>
 </resources>

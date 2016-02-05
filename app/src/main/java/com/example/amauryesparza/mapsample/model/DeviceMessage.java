@@ -24,14 +24,34 @@ public class DeviceMessage {
 
     private final String mInstanceId;
     private final String mMessageBody;
-    private String mMessage;
-    
+
+
+    private DeviceMessage(String instanceId) {
+        this.mInstanceId = instanceId;
+        this.mMessageBody = Build.MODEL;
+    }
+
+    private DeviceMessage(String instanceId, String message) {
+        this.mInstanceId = instanceId;
+        this.mMessageBody = Build.MODEL + ": " + message;
+    }
+
     /**
      * Builds a new {@link Message} object using a unique identifier.
+     * @param instanceId: unique message ID
+     * @param message: Text message to send. If message is null then return the device name.
+     *
      */
-    public static Message newNearbyMessage(String instanceId) {
+    public static Message newNearbyMessage(String instanceId, String message) {
+
+        if(message != null){
+            DeviceMessage deviceMessage = new DeviceMessage(instanceId, message);
+            return new Message(gson.toJson(deviceMessage).toString().getBytes(Charset.forName("UTF-8")));
+        }
+
         DeviceMessage deviceMessage = new DeviceMessage(instanceId);
         return new Message(gson.toJson(deviceMessage).toString().getBytes(Charset.forName("UTF-8")));
+
     }
 
     /**
@@ -44,12 +64,6 @@ public class DeviceMessage {
         return gson.fromJson(
                 (new String(nearbyMessageString.getBytes(Charset.forName("UTF-8")))),
                 DeviceMessage.class);
-    }
-
-    private DeviceMessage(String instanceId) {
-        this.mInstanceId = instanceId;
-        this.mMessageBody = Build.MODEL;
-        // TODO(developer): add other fields that must be included in the Nearby Message payload.
     }
 
     public String getMessageBody() {

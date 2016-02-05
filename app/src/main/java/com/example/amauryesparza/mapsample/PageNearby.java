@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -35,6 +36,7 @@ import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by AmauryEsparza on 12/10/15.
@@ -62,7 +64,9 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
      * minutes.
      */
     private static final Strategy PUB_SUB_STRATEGY = new Strategy.Builder()
-            .setTtlSeconds(Constants.TTL_IN_SECONDS).build();
+            .setTtlSeconds(Constants.TTL_IN_SECONDS)
+            .setDistanceType(Strategy.DISTANCE_TYPE_EARSHOT)
+            .build();
 
     /**
      * A {@link MessageListener} for processing messages from nearby devices.
@@ -73,6 +77,11 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
      * The {@link Message} object used to broadcast information about the device to nearby devices.
      */
     private Message mDeviceInfoMessage;
+
+    /**
+     * The {@link Message} object used to broadcast an custom message to nearby devices.
+     */
+    private Message mMessage;
 
     /**
      * Adapter for working with messages from nearby devices.
@@ -88,6 +97,9 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
     private ImageButton mSubscriptionImageButton;
     private ProgressBar mPublicationProgressBar;
     private ImageButton mPublicationImageButton;
+    private EditText mNewMessageEditText;
+    private ProgressBar mNewMessageProgressBar;
+    private ImageButton mNewMessageImageButton;
 
 
     @Override
@@ -137,6 +149,18 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
                 }
             }
         });
+
+        mNewMessageEditText = (EditText) view.findViewById(R.id.new_message_edit_text);
+        //TODO: Add a listener to mNewMessageEditText for enable or disable when write something
+        mNewMessageProgressBar = (ProgressBar) view.findViewById(R.id.new_message_progress_bar);
+        mNewMessageImageButton = (ImageButton) view.findViewById(R.id.new_message_image_button);
+        mNewMessageImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNewMessage("New message");
+
+            }
+        });
         final ListView nearbyDevicesListView = (ListView) view.findViewById(
                 R.id.nearby_devices_list_view);
         mNearbyDevicesArrayAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
@@ -147,8 +171,7 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
         mMessageListener = new MessageListener() {
             @Override
             public void onFound(final Message message) {
-                final String messageString = new String(message.getContent());
-                Log.i(TAG, messageString);
+
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -156,8 +179,7 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
                                 DeviceMessage.fromNearbyMessage(message).getMessageBody());
                     }
                 });
-                Log.i(TAG + " 2 ", messageString);
-
+                Log.i(TAG, "Active users currently active");
             }
 
             @Override
@@ -186,7 +208,7 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
                 .registerOnSharedPreferenceChangeListener(this);
 
         mDeviceInfoMessage = DeviceMessage.newNearbyMessage(
-                InstanceID.getInstance(getActivity().getApplicationContext()).getId());
+                InstanceID.getInstance(getActivity().getApplicationContext()).getId(), "Hello everybody");
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity().getApplicationContext())
                 .addApi(Nearby.MESSAGES_API)
                 .addConnectionCallbacks(this)
@@ -301,8 +323,7 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
      */
     private void subscribe() {
         Log.i(TAG, "trying to subscribe");
-        // Cannot proceed without a connected GoogleApiClient. Reconnect and execute the pending
-        // task in onConnected().
+
         if (!mGoogleApiClient.isConnected()) {
             if (!mGoogleApiClient.isConnecting()) {
                 mGoogleApiClient.connect();
@@ -442,6 +463,60 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
                         }
                     });
         }
+    }
+
+    /**
+     * Publishes device information to nearby devices. If not successful, attempts to resolve any
+     * error related to Nearby permissions by displaying an opt-in dialog. Registers a callback
+     * that updates the UI when the publication expires.
+     */
+    private void publishMessage() {
+        Log.i(TAG, "trying to publish");
+
+        // Cannot proceed without a connected GoogleApiClient. Reconnect and execute the pending
+        // task in onConnected().
+        if (!mGoogleApiClient.isConnected()) {
+            if (!mGoogleApiClient.isConnecting()) {
+                mGoogleApiClient.connect();
+            }
+        } else {
+            PublishOptions options = new PublishOptions.Builder()
+                    .setStrategy(PUB_SUB_STRATEGY)
+                    .setCallback(new PublishCallback() {
+                        @Override
+                        public void onExpired() {
+                            super.onExpired();
+                            Log.i(TAG, "no longer publishing");
+                            updateSharedPreference(Constants.KEY_PUBLICATION_TASK,
+                                    Constants.TASK_NONE);
+                        }
+                    }).build();
+
+            Nearby.Messages.publish(mGoogleApiClient, mMessage, options)
+                    .setResultCallback(new ResultCallback<Status>() {
+
+                        @Override
+                        public void onResult(Status status) {
+                            if (status.isSuccess()) {
+                                Log.i(TAG, "message published successfully");
+                            } else {
+                                Log.i(TAG, "message could not be published");
+                                handleUnsuccessfulNearbyResult(status);
+                            }
+                        }
+                    });
+        }
+    }
+
+    /**
+     * Create a new {@link DeviceMessage}
+     * @param message
+     */
+    public void createNewMessage(String message){
+
+        UUID uuid = UUID.randomUUID();
+        mDeviceInfoMessage = DeviceMessage.newNearbyMessage(uuid.toString(), message);
+        publish();
     }
 
     /**
