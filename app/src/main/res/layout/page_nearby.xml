@@ -12,7 +12,7 @@
 
 
     <!-- Subscribe. -->
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -63,7 +63,7 @@
                 android:contentDescription="@string/discover_nearby_devices_button"
                 android:src="@drawable/ic_nearby" />
         </RelativeLayout>
-    </LinearLayout>
+    </LinearLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -153,50 +153,49 @@
         </RelativeLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <ListView
+            android:id="@+id/nearby_devices_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/colorPrimary"
+            android:transcriptMode="disabled"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="10dp">
 
         <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:id="@+id/new_message_edit_text"
             android:hint="@string/publish_new_message"
-            android:layout_weight="0.89" />
+            android:textColor="@android:color/black"
+            android:gravity="left|bottom" />
 
-        <ProgressBar
-            style="@android:style/Widget.ProgressBar.Small"
-            android:id="@+id/new_message_progress_bar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:visibility="invisible" />
+        <ImageButton
+            android:id="@+id/new_message_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/icon_dimension"
+            android:background="@null"
+            android:contentDescription="@string/share_device_information_button"
+            android:src="@drawable/ic_share" />
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
-
-            <ImageButton
-                android:id="@+id/new_message_image_button"
-                android:layout_width="@dimen/icon_dimension"
-                android:layout_height="@dimen/icon_dimension"
-                android:layout_centerInParent="true"
-                android:background="@null"
-                android:contentDescription="@string/share_device_information_button"
-                android:src="@drawable/ic_share" />
-        </RelativeLayout>
     </LinearLayout>
-
-    <ListView
-        android:id="@+id/nearby_devices_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:background="@color/colorPrimary"
-        android:transcriptMode="alwaysScroll" />
 </LinearLayout>

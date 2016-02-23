@@ -116,23 +116,26 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.page_nearby, container, false);
-        mSubscriptionProgressBar = (ProgressBar) view.findViewById(
-                R.id.subscription_progress_bar);
-        mSubscriptionImageButton = (ImageButton) view.findViewById(R.id.subscription_image_button);
-        mSubscriptionImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String subscriptionTask = getPubSubTask(Constants.KEY_SUBSCRIPTION_TASK);
-                if (TextUtils.equals(subscriptionTask, Constants.TASK_NONE) ||
-                        TextUtils.equals(subscriptionTask, Constants.TASK_UNSUBSCRIBE)) {
-                    updateSharedPreference(Constants.KEY_SUBSCRIPTION_TASK,
-                            Constants.TASK_SUBSCRIBE);
-                } else {
-                    updateSharedPreference(Constants.KEY_SUBSCRIPTION_TASK,
-                            Constants.TASK_UNSUBSCRIBE);
-                }
-            }
-        });
+//        mSubscriptionProgressBar = (ProgressBar) view.findViewById(
+//                R.id.subscription_progress_bar);
+//        mSubscriptionImageButton = (ImageButton) view.findViewById(R.id.subscription_image_button);
+//        mSubscriptionImageButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String subscriptionTask = getPubSubTask(Constants.KEY_SUBSCRIPTION_TASK);
+//                if (TextUtils.equals(subscriptionTask, Constants.TASK_NONE) ||
+//                        TextUtils.equals(subscriptionTask, Constants.TASK_UNSUBSCRIBE)) {
+//                    updateSharedPreference(Constants.KEY_SUBSCRIPTION_TASK,
+//                            Constants.TASK_SUBSCRIBE);
+//                } else {
+//                    updateSharedPreference(Constants.KEY_SUBSCRIPTION_TASK,
+//                            Constants.TASK_UNSUBSCRIBE);
+//                }
+//            }
+//        });
+
+        //Adding the subscription since the application starts
+        updateSharedPreference(Constants.KEY_SUBSCRIPTION_TASK, Constants.TASK_SUBSCRIBE);
 
         mPublicationProgressBar = (ProgressBar) view.findViewById(R.id.publication_progress_bar);
         mPublicationImageButton = (ImageButton) view.findViewById(R.id.publication_image_button);
@@ -152,13 +155,13 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
 
         mNewMessageEditText = (EditText) view.findViewById(R.id.new_message_edit_text);
         //TODO: Add a listener to mNewMessageEditText for enable or disable when write something
-        mNewMessageProgressBar = (ProgressBar) view.findViewById(R.id.new_message_progress_bar);
+//        mNewMessageProgressBar = (ProgressBar) view.findViewById(R.id.new_message_progress_bar);
         mNewMessageImageButton = (ImageButton) view.findViewById(R.id.new_message_image_button);
         mNewMessageImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewMessage("New message");
-
+                createNewMessage(mNewMessageEditText.getText().toString());
+                mNewMessageEditText.getText().clear();
             }
         });
         final ListView nearbyDevicesListView = (ListView) view.findViewById(
@@ -171,7 +174,7 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
         mMessageListener = new MessageListener() {
             @Override
             public void onFound(final Message message) {
-
+                Log.i(TAG, "Message " + message + " found");
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -424,6 +427,7 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
                         public void onResult(Status status) {
                             if (status.isSuccess()) {
                                 Log.i(TAG, "published successfully");
+                                mNearbyDevicesArrayAdapter.add(DeviceMessage.fromNearbyMessage(mDeviceInfoMessage).getMessageBodyWithoutHeader());
                             } else {
                                 Log.i(TAG, "could not publish");
                                 handleUnsuccessfulNearbyResult(status);
@@ -578,8 +582,6 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
      * Helper for editing entries in SharedPreferences.
      */
     private void updateSharedPreference(String key, String value) {
-        //TODO: Hot fix because cause an exception. Probably must to split the callbacks
-        //TODO: See call hierarchy Fragment.onStop() method
         if(getActivity() != null) {
             getActivity().getPreferences(Context.MODE_PRIVATE)
                     .edit()
@@ -597,16 +599,16 @@ public class PageNearby extends Fragment implements GoogleApiClient.ConnectionCa
 
         // Using Nearby is battery intensive. For this reason, progress bars are visible when
         // subscribing or publishing.
-        mSubscriptionProgressBar.setVisibility(
-                TextUtils.equals(subscriptionTask, Constants.TASK_SUBSCRIBE) ? View.VISIBLE :
-                        View.INVISIBLE);
+//        mSubscriptionProgressBar.setVisibility(
+//                TextUtils.equals(subscriptionTask, Constants.TASK_SUBSCRIBE) ? View.VISIBLE :
+//                        View.INVISIBLE);
         mPublicationProgressBar.setVisibility(
                 TextUtils.equals(publicationTask, Constants.TASK_PUBLISH) ? View.VISIBLE :
                         View.INVISIBLE);
 
-        mSubscriptionImageButton.setImageResource(
-                TextUtils.equals(subscriptionTask, Constants.TASK_SUBSCRIBE) ?
-                        R.drawable.ic_cancel : R.drawable.ic_nearby);
+//        mSubscriptionImageButton.setImageResource(
+//                TextUtils.equals(subscriptionTask, Constants.TASK_SUBSCRIBE) ?
+//                        R.drawable.ic_cancel : R.drawable.ic_nearby);
 
         mPublicationImageButton.setImageResource(
                 TextUtils.equals(publicationTask, Constants.TASK_PUBLISH) ?

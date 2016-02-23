@@ -70,4 +70,8 @@ public class DeviceMessage {
         return mMessageBody;
     }
 
+    public String getMessageBodyWithoutHeader(){
+        return mMessageBody.replaceFirst("[\\w\\s]+", "Me");
+    }
+
 }
